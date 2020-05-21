@@ -1,0 +1,16 @@
+<p>Номер заказа: {{ batch_id }}</p>
+
+<p>
+  Позиции:
+</p>
+
+<ul>
+  {% for item in positions %}
+  <li>{{ item.data.name }} - {{ item.data.quantity }}</li>
+  {% endfor %}
+</ul>
+
+<p>Сумма заказа: {{ total }}</p>
+<p>Дата заказа: {{ created_on }}</p>
+
+<p>The medtrading.org support</p>
