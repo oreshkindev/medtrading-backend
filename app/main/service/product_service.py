@@ -1,10 +1,11 @@
+
 import os
-import uuid
 import datetime
 import base64
 
-from app.main import db
 from app.main.model.product import Product
+from app.main import db
+from app.main.config import upload
 from slugify import slugify
 
 
@@ -79,17 +80,17 @@ def get_a_product(batch_id):
     
 def set_image(image, name, oldname=None):
     if image == oldname:
-        os.rename(os.path.join('D:/development/medtrading-frontend/src/assets/images/product/', oldname),os.path.join('D:/development/medtrading-frontend/src/assets/images/product/', slugify(name) + '.png'))
+        os.rename(os.path.join(upload + '/product/', oldname),os.path.join(upload + '/product/', slugify(name) + '.png'))
 
     else:
         if oldname:
-            os.remove(os.path.join('D:/development/medtrading-frontend/src/assets/images/product/', oldname))
+            os.remove(os.path.join(upload + '/product/', oldname))
         # generate data image from base64
         base64_message = image[image.index(',') + 1:]
         base64_bytes = base64_message.encode('ascii')
         message_bytes = base64.b64decode(base64_bytes)
 
-        image_file = open('D:/development/medtrading-frontend/src/assets/images/product/' + slugify(name) + '.png', 'wb')
+        image_file = open(upload + '/product/' + slugify(name) + '.png', 'wb')
         image_file.write(message_bytes)
         image_file.close()
 
@@ -102,7 +103,7 @@ def remove_a_product(data):
         }
         return response_object, 409
     else:
-        os.remove(os.path.join('D:/development/medtrading-frontend/src/assets/images/product/', product.public_name + '.png'))
+        os.remove(os.path.join(upload + '/product/', product.public_name + '.png'))
 
         remove_changes(product)
 

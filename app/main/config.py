@@ -1,9 +1,15 @@
+
 import os
 
 # uncomment the line below for postgres database url from environment variable
 # postgres_local_base = os.environ['DATABASE_URL']
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+
+# production path /var/www/medtrading-frontend/dist/img
+# development path D:/development/medtrading-frontend/src/assets/images
+
+upload = '/var/www/medtrading-frontend/dist/img'
 
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY', 'f7b93a0615d24ac1a773b5de5158673c')

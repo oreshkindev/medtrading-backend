@@ -1,10 +1,10 @@
+
 import os
-import uuid
-import datetime
 import base64
 
-from app.main import db
 from app.main.model.category import Category
+from app.main import db
+from app.main.config import upload
 from slugify import slugify
 
 
@@ -30,7 +30,7 @@ def save_new_category(data):
         }
         return response_object, 201
     else:
-        os.remove(os.path.join('D:/development/medtrading-frontend/src/assets/images/category/', category.public_name + '.png'))
+        os.remove(os.path.join(upload + '/category/', category.public_name + '.png'))
 
         # generate data image from base64
         set_image(data['image'], data['name'])
@@ -67,7 +67,7 @@ def set_image(image, name):
     base64_bytes = base64_message.encode('ascii')
     message_bytes = base64.b64decode(base64_bytes)
 
-    image_file = open('D:/development/medtrading-frontend/src/assets/images/category/' + slugify(name) + '.png', 'wb')
+    image_file = open(upload + '/category/' + slugify(name) + '.png', 'wb')
     image_file.write(message_bytes)
     image_file.close()
 
@@ -81,7 +81,7 @@ def remove_a_category(data):
         }
         return response_object, 409
     else:
-        os.remove(os.path.join('D:/development/medtrading-frontend/src/assets/images/category/', category.public_name + '.png'))
+        os.remove(os.path.join(upload + '/category/', category.public_name + '.png'))
 
         remove_changes(category)
 
