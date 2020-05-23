@@ -8,7 +8,7 @@ from .main.controller.category_controller import api as category_ns
 from .main.controller.checkout_controller import api as checkout_ns
 from .main.controller.callto_controller import api as callto_ns
 
-blueprint = Blueprint('api', __name__, url_prefix='/v1')
+blueprint = Blueprint('api', __name__)
 
 api = Api(blueprint,
           title='MEDTRADING.ORG API',
