@@ -1,23 +1,20 @@
-import uuid
-import datetime
+import uuid, datetime
 
-from app.main import db
-from app.main.model.user import User
+from flask import render_template, current_app
 from flask_mail import Message
-from app.main import mail
-from flask import render_template
-from flask import current_app
+from app.main import db, mail
+from app.main.model.user import User
 
 def save_new_user(data):
-    user = User.query.filter_by(email=data['email']).first()
+    user = User.query.filter_by(email = data['email']).first()
     if not user:
         new_user = User(
-            public_id=str(User.encode_auth_token(data['email'])),
-            email=data['email'],
-            name=data['name'],
-            password=data['password'],
-            confirmed=False,
-            registered_on=datetime.datetime.utcnow()
+            public_id = str(User.encode_auth_token(data['email'])),
+            email = data['email'],
+            name = data['name'],
+            password = data['password'],
+            confirmed = False,
+            registered_on = datetime.datetime.utcnow()
         )
         save_changes(new_user)
 

@@ -1,7 +1,5 @@
 
-import os
-import datetime
-import base64
+import os, datetime, base64
 
 from app.main.model.product import Product
 from app.main import db
