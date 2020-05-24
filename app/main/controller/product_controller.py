@@ -4,7 +4,7 @@ from flask_restplus import Resource
 
 from app.main.util.decorator import admin_token_required
 from ..util.dto import ProductDto
-from ..service.product_service import save_new_product, get_all_products, get_a_product, remove_a_product
+from ..service.product_service import save_product, get_all_products, get_a_product, update_product, remove_a_product
 
 api = ProductDto.api
 _product = ProductDto.product
@@ -25,7 +25,7 @@ class ProductList(Resource):
     def post(self):
         """ Регистрация нового товара """
         data = request.json
-        return save_new_product(data=data)
+        return save_product(data=data)
 
 
 @api.route('/<batch_id>')
@@ -42,15 +42,17 @@ class Product(Resource):
         else:
             return product
 
-
-@api.route('/remove/')
-@api.response(404, 'Товар не найден')
-class Product(Resource):
-    @api.doc('get a product')
-    def post(self):
-        """ Удаление товара """
+    @api.response(201, 'Товар успешно обновлен')
+    def put(self, batch_id):
+        """ Обновление товара """
         data = request.json
-        return remove_a_product(data=data)
+        return update_product(batch_id, data)
+
+
+    @api.response(201, 'Товар успешно удален')
+    def delete(self, batch_id):
+        """ Удаление товара """
+        return remove_a_product(batch_id)
 
 
 

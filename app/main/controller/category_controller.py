@@ -4,7 +4,7 @@ from flask_restplus import Resource
 
 from app.main.util.decorator import admin_token_required
 from ..util.dto import CategoryDto
-from ..service.category_service import save_new_category, get_all_categorys, get_a_category, remove_a_category
+from ..service.category_service import save_category, get_all_categorys, get_a_category, update_category, remove_a_category
 
 api = CategoryDto.api
 _category = CategoryDto.category
@@ -25,7 +25,7 @@ class CategoryList(Resource):
     def post(self):
         """ Регистрация новой категории """
         data = request.json
-        return save_new_category(data=data)
+        return save_category(data=data)
 
 
 @api.route('/<public_id>')
@@ -42,12 +42,14 @@ class Category(Resource):
         else:
             return category
 
-
-@api.route('/remove/')
-@api.response(404, 'Category not found.')
-class Category(Resource):
-    @api.doc('get a category')
-    def post(self):
-        """Remove a new category """
+    @api.response(404, 'Category not found.')
+    def put(self, public_id):
+        """ Обновление категории """
         data = request.json
-        return remove_a_category(data=data)
+        return update_category(public_id, data)
+
+
+    @api.response(404, 'Category not found.')
+    def delete(self, public_id):
+        """Удаление категории """
+        return remove_a_category(public_id)

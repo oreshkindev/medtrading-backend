@@ -1,7 +1,9 @@
-from flask import request
+
+from flask import request, redirect
 from flask_restplus import Resource
-from flask import redirect
+
 from app.main.util.decorator import admin_token_required
+
 from ..util.dto import UserDto
 from ..service.user_service import save_new_user, get_all_users, get_a_user, user_confirmation
 

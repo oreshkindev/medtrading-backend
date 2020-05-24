@@ -1,9 +1,10 @@
 import uuid
 import datetime
 
-from app.main import db
+from app.main import db, mail
 from app.main.model.callto import Callto
 
+from flask_mail import Message
 
 def save_new_callto(data):
     phone = data.get('phone')
@@ -19,6 +20,13 @@ def save_new_callto(data):
         registered_on=datetime.datetime.utcnow()
     )
     save_changes(new_callto)
+
+    msg = Message("Запрос на сайте Medtrading.org",
+                sender=('Medtrading Support', current_app.config['MAIL_USERNAME']),
+                html = render_template('callto_email.html', name=data['name'], phone=data['phone'], registered_on=new_callto.registered_on),
+                recipients=[current_app.config['MAIL_USERNAME']])
+    mail.send(msg)
+
     response_object = {
         'status': 'success',
         'message': 'Заявка успешно добавлена.'

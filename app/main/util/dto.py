@@ -7,7 +7,6 @@ class UserDto:
     user = api.model('user', {
         'name': fields.String(description='The user name'),
         'email': fields.String(required=True, description='user email address'),
-        'login': fields.String(description='user login'),
         'password': fields.String(required=True, description='user password'),
         'phone': fields.String(description='user phone'),
         'public_id': fields.String(description='user Identifier')
@@ -31,8 +30,8 @@ class ProductDto:
         'body': fields.String(description='The body name'),
         'price': fields.String(required=True, description='product price'),
         'quantity': fields.String(required=True, description='product quantity'),
-        'batch_id': fields.String(required=True, description='product Identifier'),
-        'category_id': fields.String(required=True, description='product category Identifier'),
+        'batch_id': fields.String(description='product Identifier'),
+        'category_id': fields.String(description='product category Identifier'),
         'manufacturer': fields.String(required=True, description='product manufacturer Identifier'),
         'country': fields.String(required=True, description='product country Identifier'),
         'weight': fields.String(required=True, description='product weight Identifier'),
@@ -46,7 +45,7 @@ class CategoryDto:
     category = api.model('category', {
         'name': fields.String(required=True, description='category name'),
         'public_name': fields.String(description='category Slug'),
-        'public_id': fields.String(required=True, description='category Identifier'),
+        'public_id': fields.String(description='category Identifier'),
         'description': fields.String(description='category description'),
         'image': fields.String(description='product Identifier'),
     })

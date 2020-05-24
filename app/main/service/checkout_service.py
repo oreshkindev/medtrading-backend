@@ -23,7 +23,7 @@ def save_new_checkout(data):
     msg = Message("Статус заказа на сайте Medtrading.org",
                 sender=('Medtrading Support', current_app.config['MAIL_USERNAME']),
                 html = render_template('checkout_email.html', name=data['name'], batch_id=new_checkout.batch_id, positions=data['positions'], total=data['total'], created_on=new_checkout.created_on),
-                recipients=[data['email']])
+                recipients=[data['email'], current_app.config['MAIL_USERNAME']])
     mail.send(msg)
 
     response_object = {
