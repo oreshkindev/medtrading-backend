@@ -13,7 +13,7 @@ class Product(db.Model):
     public_name = db.Column(db.String(255), unique=True, nullable=False)
     description = db.Column(db.String(255))
     body = db.Column(db.String(255))
-    price = db.Column(db.Float(100), nullable=False)
+    price = db.Column(db.Float, nullable=False)
     quantity = db.Column(db.String(100), nullable=False)
     batch_id = db.Column(db.String(100), unique=True, nullable=False)
     category_id = db.Column(db.String(100), unique=True, nullable=False)
