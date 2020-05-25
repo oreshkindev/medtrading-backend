@@ -12,7 +12,7 @@ class Checkout(db.Model):
     name = db.Column(db.String(255))
     email = db.Column(db.String(255))
     positions = db.Column(db.String(255))
-    total = db.Column(db.Float(100))
+    total = db.Column(db.Float)
     status = db.Column(db.Boolean, nullable=False, default=False)
     batch_id = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(255))
