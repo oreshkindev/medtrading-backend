@@ -1,9 +1,9 @@
 import uuid, datetime
 
 from flask import render_template, current_app
-from flask_mail import Message
-from app.main import db, mail
+from app.main import db
 from app.main.model.user import User
+from app.main.util.email import send_register_email
 
 def save_new_user(data):
     user = User.query.filter_by(email = data['email']).first()
@@ -45,11 +45,7 @@ def generate_token(user):
             'Authorization': auth_token.decode()
         }
 
-        msg = Message("Account confirmation on Medtrading.org",
-                  sender=('Medtrading Support', current_app.config['MAIL_USERNAME']),
-                  html = render_template('follower_email.html', confirm_url=user.public_id),
-                  recipients=[user.email])
-        mail.send(msg)
+        send_register_email(user)
 
         return response_object, 201
 

@@ -23,6 +23,7 @@ class Config:
     # gmail authentication
     MAIL_USERNAME = 'info@medtrading.org'
     MAIL_PASSWORD = 'Q12345678q'
+    MANAGER_MAIL = 'admin@medtrading.org'
 
 class DevelopmentConfig(Config):
     # uncomment the line below to use postgres

@@ -15,7 +15,7 @@ class Checkout(db.Model):
     total = db.Column(db.Float)
     status = db.Column(db.Boolean, nullable=False, default=False)
     batch_id = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(255))
+    phone = db.Column(db.String(255))
     created_on = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):

@@ -1,30 +1,26 @@
 import uuid, datetime, random
 
-from app.main import db, mail
+from app.main import db
 from app.main.model.checkout import Checkout
+from app.main.util.email import send_checkout_email, send_checkout_admin
 
-from flask_mail import Message
-from flask import render_template, current_app
-
+from flask import render_template
 
 def save_new_checkout(data):
-    new_checkout = Checkout(
+    checkout = Checkout(
         batch_id=generate_random_number(6),
         email=data['email'],
         name=data['name'],
-        description=data['description'],
+        phone=data['phone'],
         positions=str(data['positions']),
         total=data['total'],
         created_on=datetime.datetime.utcnow()
     )
-    save_changes(new_checkout)
+    save_changes(checkout)
 
+    send_checkout_email(checkout, data['positions'])
 
-    msg = Message("Статус заказа на сайте Medtrading.org",
-                sender=('Medtrading Support', current_app.config['MAIL_USERNAME']),
-                html = render_template('checkout_email.html', name=data['name'], batch_id=new_checkout.batch_id, positions=data['positions'], total=data['total'], created_on=new_checkout.created_on),
-                recipients=[data['email'], current_app.config['MAIL_USERNAME']])
-    mail.send(msg)
+    send_checkout_admin(checkout, data['positions'])
 
     response_object = {
         'status': 'success',

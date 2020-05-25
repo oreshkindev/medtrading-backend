@@ -7,7 +7,16 @@ from flask_cors import CORS
 
 from .config import config_by_name
 
-db = SQLAlchemy()
+
+class SQLiteAlchemy(SQLAlchemy):
+    def apply_driver_hacks(self, app, info, options):
+        options.update({
+            'isolation_level': 'READ UNCOMMITTED',
+        })
+        super(SQLiteAlchemy, self).apply_driver_hacks(app, info, options)
+
+
+db = SQLiteAlchemy()
 flask_bcrypt = Bcrypt()
 mail = Mail()
 
