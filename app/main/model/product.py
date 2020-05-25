@@ -16,7 +16,7 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     quantity = db.Column(db.String(100), nullable=False)
     batch_id = db.Column(db.String(100), unique=True, nullable=False)
-    category_id = db.Column(db.String(100), unique=True, nullable=False)
+    category_id = db.Column(db.String(100), nullable=False)
     manufacturer = db.Column(db.String(100), nullable=False)
     country = db.Column(db.String(100), nullable=False)
     minimal_order = db.Column(db.String(100), nullable=False)
