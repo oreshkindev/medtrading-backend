@@ -4,9 +4,9 @@ from .. import db
 import datetime
 
 
-class Callto(db.Model):
+class Callback(db.Model):
     """ Модель заявок """
-    __tablename__ = "callto"
+    __tablename__ = "callback"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50))

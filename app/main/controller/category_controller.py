@@ -2,9 +2,9 @@
 from flask import request
 from flask_restplus import Resource
 
-from app.main.util.decorator import admin_token_required
+from ..util.decorator import admin_token_required
 from ..util.dto import CategoryDto
-from ..service.category_service import save_category, get_all_categorys, get_a_category, update_category, remove_a_category
+from ..service.category_service import save, get_all, get_one, update, remove, validate_payload
 
 api = CategoryDto.api
 _category = CategoryDto.category
@@ -12,44 +12,46 @@ _category = CategoryDto.category
 
 @api.route('/')
 class CategoryList(Resource):
-    @api.doc('list_of_registered_categorys')
-    @api.marshal_list_with(_category, envelope='data')
+    @api.marshal_list_with(_category)
     def get(self):
         """ Список зарегистрированных категорий """
-        return get_all_categorys()
+        return get_all()
 
     @admin_token_required
-    @api.expect(_category, validate=True)
+    @api.expect(_category)
     @api.response(201, 'Категория успешно создана.')
-    @api.doc('create a new category')
+    @api.response(401, 'Проверьте введенные данные. Все поля должны быть заполнены.')
     def post(self):
         """ Регистрация новой категории """
-        data = request.json
-        return save_category(data=data)
+        v = validate_payload(self.api.payload, _category)
+        if v:
+            return v
+        else:
+            return save(data = request.json)
 
 
 @api.route('/<public_id>')
-@api.param('public_id', 'Идентификатор категории')
 @api.response(404, 'Категория не найдена.')
 class Category(Resource):
-    @api.doc('get a category')
-    @api.marshal_with(_category, mask=False)
+    @api.marshal_with(_category)
     def get(self, public_id):
         """ Получить категорию по ее идентификатору """
-        category = get_a_category(public_id)
+        category = get_one(public_id)
         if not category:
             api.abort(404)
         else:
             return category
 
-    @api.response(404, 'Category not found.')
+    @api.response(201, 'Категория успешно обновлена.')
     def put(self, public_id):
         """ Обновление категории """
-        data = request.json
-        return update_category(public_id, data)
+        return update(public_id, request.json)
 
 
-    @api.response(404, 'Category not found.')
+    @api.response(201, 'Категория успешно удалена.')
     def delete(self, public_id):
-        """Удаление категории """
-        return remove_a_category(public_id)
+        """ Удаление категории """
+        return remove(public_id)
+
+
+

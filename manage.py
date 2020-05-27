@@ -5,7 +5,7 @@ from flask_script import Manager
 
 from app import blueprint
 from app.main import create_app, db
-from app.main.model import user, blacklist, product, category, checkout, callto
+from app.main.model import user, blacklist, product, category, checkout, callback
 
 app = create_app(os.getenv('MEDTRADING_ENV') or 'dev')
 # app.register_blueprint(api, url_prefix='/api/1')

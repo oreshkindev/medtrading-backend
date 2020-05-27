@@ -2,10 +2,10 @@
 from flask import request, redirect
 from flask_restplus import Resource
 
-from app.main.util.decorator import admin_token_required
+from ..util.decorator import admin_token_required
 
 from ..util.dto import UserDto
-from ..service.user_service import save_new_user, get_all_users, get_a_user, user_confirmation
+from ..service.user_service import save, get_all, get_one, confirm, remove, validate_payload
 
 api = UserDto.api
 _user = UserDto.user
@@ -13,43 +13,48 @@ _user = UserDto.user
 
 @api.route('/')
 class UserList(Resource):
-    @api.doc('list_of_registered_users')
     @admin_token_required
-    @api.marshal_list_with(_user, envelope='data')
+    @api.marshal_list_with(_user)
     def get(self):
         """ Список зарегистрированных пользователей """
-        return get_all_users()
+        return get_all()
 
-    @api.expect(_user, validate=True)
+    @api.expect(_user)
     @api.response(201, 'Пользователь успешно создан.')
-    @api.doc('create a new user')
     def post(self):
         """ Регистрация нового пользователя """
-        data = request.json
-        return save_new_user(data=data)
+        v = validate_payload(self.api.payload, _user)
+        if v:
+            return v
+        else:
+            return save(data = request.json)
 
 
 @api.route('/<public_id>')
-@api.param('public_id', 'Идентификатор пользователя')
-@api.response(404, 'Пользователь не найден.')
+@api.response(401, 'Пользователь не найден.')
 class User(Resource):
-    @api.doc('get a user')
     @api.marshal_with(_user)
     def get(self, public_id):
         """ Получить информацию о пользователе по его идентификатору """
-        user = get_a_user(public_id)
+        user = get_one(public_id)
         if not user:
-            api.abort(404)
+            api.abort(401)
         else:
             return user
 
 
+    @api.response(401, 'Пользователь не найден.')
+    def delete(self, public_id):
+        """Удаление пользователя """
+        return remove(public_id)
+
+
+
 @api.route('/confirmation/<public_id>')
-@api.response(404, 'Пользователь не найден.')
+@api.response(401, 'Пользователь не найден.')
 class User(Resource):
-    @api.doc('confirm user')
     def get(self, public_id):
-        user_confirmation(public_id)
+        confirm(public_id)
         
         return redirect('https://medtrading.org/')
 

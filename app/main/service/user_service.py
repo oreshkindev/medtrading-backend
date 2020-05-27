@@ -1,51 +1,54 @@
+
 import uuid, datetime
 
-from flask import render_template, current_app
-from app.main import db
-from app.main.model.user import User
-from app.main.util.email import send_register_email
+from .. import db
+from ..model.user import User
+from ..util.email import send_register_email
 
-def save_new_user(data):
-    user = User.query.filter_by(email = data['email']).first()
-    if not user:
-        new_user = User(
-            public_id = str(User.encode_auth_token(data['email'])),
+def save(data):
+
+    find = User.query.filter_by(email = data['email']).first()
+
+    if not find:
+        this = User (
             email = data['email'],
             name = data['name'],
             password = data['password'],
-            confirmed = False,
+            public_id = str(User.encode_auth_token(data['email'])),
             registered_on = datetime.datetime.utcnow()
         )
-        save_changes(new_user)
 
-        return generate_token(new_user)
+        db.session.add(this)
+        db.session.commit()
+
+        return generate_token(this)
     else:
         response_object = {
             'status': 'fail',
-            'message': 'Такой пользователь уже есть в системе. Пожалуйста авторизуйтесь.',
+            'message': 'Проверьте введенные данные. Возможно такой пользователь уже есть в системе. Пожалуйста авторизуйтесь.',
         }
-        return response_object, 409
+        return response_object, 401
 
 
-def get_all_users():
+def get_all():
     return User.query.all()
 
 
-def get_a_user(public_id):
-    return User.query.filter_by(public_id=public_id).first()
+def get_one(public_id):
+    return User.query.filter_by(public_id = public_id).first()
 
 
-def generate_token(user):
+def generate_token(this):
     try:
-        # generate the auth token
-        auth_token = User.encode_auth_token(user.id)
+        auth_token = User.encode_auth_token(this.id)
+
         response_object = {
             'status': 'success',
-            'message': 'Пользователь успешно зарегистрирован.',
+            'message': 'Регистрация прошла успешно. Мы отправили вам письмо с инструкциями по активации вашего аккаунта.',
             'Authorization': auth_token.decode()
         }
 
-        send_register_email(user)
+        send_register_email(this)
 
         return response_object, 201
 
@@ -57,17 +60,59 @@ def generate_token(user):
         return response_object, 401
 
 
-def user_confirmation(public_id):
-    user = User.query.filter_by(public_id=public_id).first()
-    update = User.query.filter_by(public_id=public_id).update(
+def confirm(public_id):
+    User.query.filter_by(public_id = public_id).update(
         dict(
-            confirmed=True
+            confirmed = True
         )
     )
 
     db.session.commit()
 
-def save_changes(data):
-    db.session.add(data)
-    db.session.commit()
+
+def remove(public_id):
+    this = User.query.filter_by(public_id = public_id).first()
+
+    if this.admin == True:
+        response_object = {
+            'status': 'fail',
+            'message': 'Отказано в доступе.',
+        }
+        return response_object, 401
+    else:
+        db.session.delete(this)
+        db.session.commit()
+
+        response_object = {
+            'status': 'success',
+            'message': 'Пользователь успешно удален.'
+        }
+        return response_object, 201
+
+
+def validate_payload(payload, api_model):
+    """
+    Validate payload against an api_model. Aborts in case of failure
+    - This function is for custom fields as they can't be validated by
+      flask restplus automatically.
+    - This is to be called at the start of a post or put method
+    """
+    # check if any reqd fields are missing in payload
+    for key in api_model:
+        if api_model[key].required and key not in payload:
+
+            response_object = {
+                'status': 'fail',
+                'message': 'Проверьте введенные данные. Все поля должны быть заполнены.'
+            }
+            return response_object, 401
+
+    for key in payload:
+        if len(payload[key]) == 0:
+
+            response_object = {
+                'status': 'fail',
+                'message': 'Проверьте введенные данные. Все поля должны быть заполнены.'
+            }
+            return response_object, 401
 

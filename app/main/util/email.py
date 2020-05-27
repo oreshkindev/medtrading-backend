@@ -30,7 +30,7 @@ def send_checkout_admin(user, data):
                body = render_template('checkout_admin_email.html', name = user.name, phone = user.phone, batch_id = user.batch_id, positions = data, total = user.total, created_on = user.created_on))
 
 
-def send_callto_email(user):
+def send_callback_email(user):
     send_email('Запрос на сайте Medtrading.org',
                sender = ('Medtrading Support', current_app.config['MAIL_USERNAME']),
                recipients = [current_app.config['MANAGER_MAIL']],
