@@ -19,10 +19,7 @@ def save(data):
     )
 
     db.session.add(this)
-    try:
-        db.session.commit()
-    except Exception as e:
-        session.rollback()
+    db.session.commit()
 
     send_checkout_email(this, data['positions'])
 
@@ -45,10 +42,7 @@ def update(batch_id, data):
         )
     )
 
-    try:
-        db.session.commit()
-    except Exception as e:
-        session.rollback()
+    db.session.commit()
 
     response_object = {
         'status': 'success',
@@ -68,10 +62,7 @@ def remove(batch_id):
         return response_object, 409
     else:
         db.session.delete(this)
-        try:
-            db.session.commit()
-        except Exception as e:
-            session.rollback()
+        db.session.commit()
 
         response_object = {
             'status': 'success',

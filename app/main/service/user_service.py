@@ -19,10 +19,7 @@ def save(data):
         )
 
         db.session.add(this)
-        try:
-            db.session.commit()
-        except Exception as e:
-            session.rollback()
+        db.session.commit()
 
         return generate_token(this)
     else:
@@ -70,10 +67,7 @@ def confirm(public_id):
         )
     )
 
-    try:
-        db.session.commit()
-    except Exception as e:
-        session.rollback()
+    db.session.commit()
 
 
 def remove(public_id):
@@ -87,10 +81,7 @@ def remove(public_id):
         return response_object, 401
     else:
         db.session.delete(this)
-        try:
-            db.session.commit()
-        except Exception as e:
-            session.rollback()
+        db.session.commit()
 
         response_object = {
             'status': 'success',

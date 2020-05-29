@@ -32,6 +32,7 @@ class DevelopmentConfig(Config):
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'medtrading.db')
     SQLALCHEMY_DATABASE_URI = 'mysql://root:''@localhost/mydatabase'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_POOL_RECYCLE = 21600
 
 class ProductionConfig(Config):
     DEBUG = False
