@@ -9,7 +9,10 @@ def save_token(token):
     try:
         # insert the token
         db.session.add(blacklist_token)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            session.rollback()
         response_object = {
             'status': 'success',
             'message': 'Успешное завершение сеанса.'

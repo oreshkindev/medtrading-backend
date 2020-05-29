@@ -14,7 +14,10 @@ def save(data):
     )
 
     db.session.add(this)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        session.rollback()
 
     send_callback_email(this)
 
@@ -44,7 +47,10 @@ def remove(id):
         return response_object, 400
     else:
         db.session.delete(this)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            session.rollback()
 
         response_object = {
             'status': 'success',

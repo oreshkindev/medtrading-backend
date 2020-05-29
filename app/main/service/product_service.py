@@ -36,7 +36,10 @@ def save(data):
         set_image(data['image'], data['name'])
 
         db.session.add(this)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            session.rollback()
 
         response_object = {
             'status': 'success',
@@ -70,7 +73,10 @@ def update(batch_id, data):
         )
     )
 
-    db.session.commit()
+    try:
+        db.session.commit()
+    except Exception as e:
+        session.rollback()
 
     response_object = {
         'status': 'success',
@@ -119,7 +125,10 @@ def remove(batch_id):
         os.remove(os.path.join(upload + '/product/', this.public_name + '.png'))
 
         db.session.delete(this)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            session.rollback()
 
         response_object = {
             'status': 'success',
