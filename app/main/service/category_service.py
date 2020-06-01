@@ -62,6 +62,7 @@ def update(public_id, data):
     return response_object, 201
 
 def get_all():
+    db.session.close()
     return Category.query.all()
 
 
