@@ -45,7 +45,11 @@ class Category(Resource):
     @api.response(201, 'Категория успешно обновлена.')
     def put(self, public_id):
         """ Обновление категории """
-        return update(public_id, request.json)
+        v = validate_payload(self.api.payload, _category)
+        if v:
+            return v
+        else:
+            return update(public_id, request.json)
 
 
     @api.response(201, 'Категория успешно удалена.')

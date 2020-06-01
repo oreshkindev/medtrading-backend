@@ -45,7 +45,11 @@ class Product(Resource):
     @api.response(201, 'Товар успешно обновлен')
     def put(self, batch_id):
         """ Обновление товара """
-        return update(batch_id, request.json)
+        v = validate_payload(self.api.payload, _product)
+        if v:
+            return v
+        else:
+            return update(batch_id, request.json)
 
 
     @api.response(201, 'Товар успешно удален')

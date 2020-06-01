@@ -26,14 +26,14 @@ class Config:
     MANAGER_MAIL = 'admin@medtrading.org'
 
 class DevelopmentConfig(Config):
-    # uncomment the line below to use postgres
-    # SQLALCHEMY_DATABASE_URI = postgres_local_base
-    DEBUG = True
-    # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'medtrading.db')
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:''@localhost/mydatabase'
+    # uncomment the line below to use postgres 
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://adm:jm6F76H@127.0.0.1:5432/mydatabase'
+    DEBUG = False
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'medtrading.db')http://127.0.0.1:50101/?key=a426f3bc-374a-45fb-9c54-c8df54cd5eab
+    # SQLALCHEMY_DATABASE_URI = 'mysql://root:''@localhost/mydatabase'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_POOL_RECYCLE = 30
-    SQLALCHEMY_POOL_PRE_PING = True
+    # SQLALCHEMY_POOL_RECYCLE = 3600
+    # SQLALCHEMY_POOL_PRE_PING = True
 
 class ProductionConfig(Config):
     DEBUG = False
